@@ -7,12 +7,12 @@ Vue.config.productionTip = false
 
 Vue.use(VueResource)
 
-// 自定义指令
-Vue.directive('rainbow',{
-  bind(el,binding,vnode){
-    el.style.color="#"+Math.random().toString().slice(2,8);
-  }
-})
+// 全局自定义指令
+// Vue.directive('rainbow',{
+//   bind(el,binding,vnode){
+//     el.style.color="#"+Math.random().toString().slice(2,8);
+//   }
+// })
 Vue.directive('theme',{
   bind(el,binding,vnode){
     if(binding.value=="wide"){
@@ -25,6 +25,14 @@ Vue.directive('theme',{
       el.style.padding="20px";
     }
   }
+})
+
+// 全局自定义过滤器
+// Vue.filter("to-uppercase",function (value) {
+//   return value.toUpperCase();
+// })
+Vue.filter("snippet",function (value) {
+  return value.slice(0,100)+"...";
 })
 
 new Vue({

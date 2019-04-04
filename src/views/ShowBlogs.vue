@@ -1,9 +1,12 @@
 <template xmlns:v-theme="http://www.w3.org/1999/xhtml">
     <div id="show-blogs" v-theme:column="'wide'">
         <h1>博客总览</h1>
-        <div class="single-blog" v-for="blog in blogs" :key="blog.id">
-            <h2 v-rainbow>{{blog.title}}</h2>
-            <article>{{blog.body}}</article>
+        <input type="text" v-model="search" placeholder="搜索">
+        <div class="single-blog" v-for="blog in filteredBlogs" :key="blog.id">
+            <router-link :to="'/blog/'+blog.id">
+                <h2 v-rainbow>{{blog.title | to-uppercase}}</h2>
+            </router-link>
+            <article>{{blog.body | snippet}}</article>
         </div>
     </div>
 </template>
@@ -13,7 +16,8 @@
         name:"show-blogs",
         data(){
             return{
-                blogs:[]
+                blogs:[],
+                search:""
             }
         },
         created() {
@@ -22,7 +26,32 @@
                     this.blogs = data.body.slice(0,10);
                     console.log(this.blogs);
                 })
+        },
+        computed:{
+            filteredBlogs:function() {
+                return this.blogs.filter((blog)=>{
+                    return blog.title.match(this.search);
+                });
+            }
+        },
+        filters:{
+            // 局部过滤器
+            // "to-uppercase":function(value){
+            //     return value.toUpperCase();
+            // },
+            toUppercase(value){
+                return value.toUpperCase();
+            }
+        },
+        directives:{
+            // 局部自定义指令
+            "rainbow":{
+                bind(el,binding,vnode){
+                    el.style.color="#"+Math.random().toString().slice(2,8);
+                }
+            }
         }
+
     }
 
 </script>
@@ -37,5 +66,15 @@
         margin: 20px 0;
         box-sizing: border-box;
         background: #eee;
+        border: 1px dotted #aaa;
+    }
+    #show-blogs a{
+        color: #444;
+        text-decoration: none;
+    }
+    input[type="text"]{
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
     }
 </style>
